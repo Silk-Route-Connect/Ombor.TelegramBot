@@ -1,15 +1,16 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Ombor.TelegramBot.Application.Extentions;
 using Ombor.TelegramBot.Application.Handlers;
 using Telegram.Bot;
 
 var host = Host.CreateDefaultBuilder(args)
-     .ConfigureAppConfiguration(config =>
-     {
-         config.SetBasePath(Directory.GetCurrentDirectory());
-         config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-     })
+    .ConfigureAppConfiguration(config =>
+    {
+        config.SetBasePath(Directory.GetCurrentDirectory());
+        config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+    })
     .ConfigureServices((context, services) =>
     {
         var configuration = context.Configuration;
@@ -18,6 +19,10 @@ var host = Host.CreateDefaultBuilder(args)
         {
             throw new ArgumentNullException(nameof(configuration), "Configuration cannot be null");
         }
+
+        services.AddApplication();
+        services.AddSingleton<ITelegramBotClient>(new TelegramBotClient(configuration["TelegramBot:Token"]!));
+        services.AddSingleton<BotHandler>();
     })
     .Build();
 

@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36212.18 d17.14
+VisualStudioVersion = 17.14.36212.18
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombor.TelegramBot", "Ombor.TelegramBot.csproj", "{9E39FD4F-0F20-4783-BF47-46691254B764}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombor.TelegramBot.Application", "..\Ombor.TelegramBot.Application\Ombor.TelegramBot.Application.csproj", "{C6E181B1-12B2-444B-B0CA-369E20BC19B0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombor.TelegramBot.Domain", "..\Ombor.TelegramBot.Domain\Ombor.TelegramBot.Domain.csproj", "{2EFDD092-D1E4-4D63-9A32-988B49916F5D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{C6E181B1-12B2-444B-B0CA-369E20BC19B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6E181B1-12B2-444B-B0CA-369E20BC19B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6E181B1-12B2-444B-B0CA-369E20BC19B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EFDD092-D1E4-4D63-9A32-988B49916F5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EFDD092-D1E4-4D63-9A32-988B49916F5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EFDD092-D1E4-4D63-9A32-988B49916F5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EFDD092-D1E4-4D63-9A32-988B49916F5D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
