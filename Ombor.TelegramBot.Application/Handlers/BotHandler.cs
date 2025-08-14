@@ -1,4 +1,6 @@
-﻿using Telegram.Bot;
+﻿using Microsoft.Extensions.Configuration;
+using Ombor.TelegramBot.Application.Interfaces;
+using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 namespace Ombor.TelegramBot.Application.Handlers;
@@ -6,16 +8,18 @@ namespace Ombor.TelegramBot.Application.Handlers;
 public class BotHandler
 {
     private readonly ITelegramBotClient _bot;
-    private readonly IServiceProvider _serviceProvider;
     private readonly MessageHandler _messageHandler;
     private readonly CallbackHandler _callbackHandler;
+    private readonly IApiService _apiService;
+    private readonly IConfiguration _configuration;
 
-    public BotHandler(ITelegramBotClient client, IServiceProvider serviceProvider)
+    public BotHandler(ITelegramBotClient client, IConfiguration configuration, IApiService apiService)
     {
         _bot = client ?? throw new ArgumentNullException(nameof(client));
-        _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-        _messageHandler = new MessageHandler(_bot, _serviceProvider);
-        _callbackHandler = new CallbackHandler(_bot, _serviceProvider);
+        _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+        _apiService = apiService ?? throw new ArgumentNullException(nameof(apiService));
+        _messageHandler = new MessageHandler(_bot, _apiService);
+        _callbackHandler = new CallbackHandler(_bot, _apiService, _configuration);
     }
 
     public async Task OnUpdate(Update update)
