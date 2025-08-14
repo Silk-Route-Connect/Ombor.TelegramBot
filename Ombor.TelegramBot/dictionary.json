@@ -1,0 +1,92 @@
+﻿{
+  "main_menu": {
+    "uz": "🏠 Bosh menyu",
+    "ru": "🏠 Главное меню",
+    "en": "🏠 Main Menu"
+  },
+  "welcome": {
+    "uz": "Assalomu alaykum, botimizga xush kelibsiz! Quyidagilardan birini tanlang:",
+    "ru": "Здравствуйте, добро пожаловать в наш бот! Выберите один из вариантов ниже:",
+    "en": "Hello, welcome to our bot! Please choose one of the options below:"
+  },
+  "categories": {
+    "uz": "🛍 Kategoriyalar",
+    "ru": "🛍 Категории",
+    "en": "🛍 Categories"
+  },
+  "no_categories": {
+    "uz": "Kategoriyalar mavjud emas.",
+    "ru": "Категории отсутствуют.",
+    "en": "No categories available."
+  },
+  "back": {
+    "uz": "Orqaga",
+    "ru": "Назад",
+    "en": "Back"
+  },
+  "select_category": {
+    "uz": "📦 Kategoriya tanlang:",
+    "ru": "📦 Выберите категорию:",
+    "en": "📦 Select a category:"
+  },
+  "settings": {
+    "uz": "⚙️ Sozlamalar",
+    "ru": "⚙️ Настройки",
+    "en": "⚙️ Settings"
+  },
+  "change_language": {
+    "uz": "Tilni o'zgartirish",
+    "ru": "Изменить язык",
+    "en": "Change language"
+  },
+  "cart": {
+    "uz": "🛒 Savatcha",
+    "ru": "🛒 Корзина",
+    "en": "🛒 Cart"
+  },
+  "orders": {
+    "uz": "📦 Buyurtmalar",
+    "ru": "📦 Заказы",
+    "en": "📦 Orders"
+  },
+  "main_menu_list": {
+    "uz": "📋 Asosiy menyu:",
+    "ru": "📋 Главное меню:",
+    "en": "📋 Main Menu:"
+  },
+  "next": {
+    "uz": "Keyingi",
+    "ru": "Далее",
+    "en": "Next"
+  },
+  "products_found": {
+    "uz": "Kategoriya bo'yicha topilgan productlar.",
+    "ru": "Товары найдены по категории.",
+    "en": "Products found by category."
+  },
+  "add_to_cart_info": {
+    "uz": "Ushbu mahsulotni savatga qo'shish uchun tugmani bosing:",
+    "ru": "Нажмите кнопку, чтобы добавить этот товар в корзину:",
+    "en": "Press the button to add this product to your cart:"
+  },
+  "add_to_cart": {
+    "uz": "🛒 Savatga qo'shish",
+    "ru": "🛒 Добавить в корзину",
+    "en": "🛒 Add to cart"
+  },
+  "price": {
+    "uz": "Narxi",
+    "ru": "Цена",
+    "en": "Price"
+  },
+  "select_language": {
+    "uz": "Tilni tanlang:",
+    "ru": "Выберите язык:",
+    "en": "Select a language:"
+  },
+  "language_changed": {
+    "uz": "Til muvaffaqiyatli o'zgartirildi.",
+    "ru": "Язык успешно изменен.",
+    "en": "Language changed successfully."
+  }
+}
