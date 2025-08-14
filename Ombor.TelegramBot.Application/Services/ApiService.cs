@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Ombor.TelegramBot.Application.Interfaces;
 using Ombor.TelegramBot.Domain.Entities;
+using Ombor.TelegramBot.Domain.Requests;
 using System.Text.Json;
 
 namespace Ombor.TelegramBot.Application.Services;
@@ -9,7 +10,7 @@ internal class ApiService(HttpClient httpClient, IConfiguration configuration) :
 {
     public async Task<Category[]> GetCategoriesAsync()
     {
-        var url = configuration["OmborApi:BaseUrl"] + "/categories";
+        var url = configuration["OmborApi:ApiBaseUrl"] + "/categories";
         var response = await httpClient.GetAsync(url);
 
         response.EnsureSuccessStatusCode();
@@ -45,7 +46,7 @@ internal class ApiService(HttpClient httpClient, IConfiguration configuration) :
 
         var queryString = string.Join("&", queryParams);
 
-        var url = configuration["OmborApi:BaseUrl"] + "/products";
+        var url = configuration["OmborApi:ApiBaseUrl"] + "/products";
 
         if (queryParams.Count > 0)
         {
@@ -63,5 +64,22 @@ internal class ApiService(HttpClient httpClient, IConfiguration configuration) :
         });
 
         return products ?? [];
+    }
+
+    public async Task<Product> GetProductByIdAsync(int productId)
+    {
+        var url = $"{configuration["OmborApi:ApiBaseUrl"]}/products/{productId}";
+
+        var response = await httpClient.GetAsync(url);
+        response.EnsureSuccessStatusCode();
+
+        var json = await response.Content.ReadAsStringAsync();
+        var product = JsonSerializer.Deserialize<Product>(json, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+            WriteIndented = true
+        });
+
+        return product ?? throw new Exception($"Product with ID {productId} not found.");
     }
 }
