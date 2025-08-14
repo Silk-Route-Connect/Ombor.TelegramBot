@@ -1,6 +1,6 @@
 ﻿using Ombor.TelegramBot.Domain.Enums;
 
-namespace Ombor.TelegramBot.Domain.Entities;
+namespace Ombor.TelegramBot.Domain.Requests;
 
 public class GetProductsRequest
 {
