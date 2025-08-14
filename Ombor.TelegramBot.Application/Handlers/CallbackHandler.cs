@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Ombor.TelegramBot.Application.Extentions;
 using Ombor.TelegramBot.Application.Interfaces;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -16,7 +17,7 @@ public class CallbackHandler(ITelegramBotClient client, IApiService apiService, 
         }
 
         var data = callbackQuery.Data;
-        var chatId = callbackQuery.Message.Chat.Id;
+        var chatId = callbackQuery.Message!.Chat.Id;
 
         if (data.StartsWith("product_"))
         {
@@ -43,7 +44,7 @@ public class CallbackHandler(ITelegramBotClient client, IApiService apiService, 
                 {
                     new []
                     {
-                        InlineKeyboardButton.WithCallbackData("🛒 Savatga qo'shish", $"add_{productId}")
+                        InlineKeyboardButton.WithCallbackData(Translator.Translate("add_to_cart",Translator.UserLang[chatId]), $"add_{productId}")
                     }
                 });
 
@@ -54,10 +55,14 @@ public class CallbackHandler(ITelegramBotClient client, IApiService apiService, 
 
                 await client.SendMessage(
                      chatId: chatId,
-                     text: "Ushbu mahsulotni savatga qo'shish uchun tugmani bosing:",
+                     text: Translator.Translate("add_to_cart_info", Translator.UserLang[chatId]),
                      replyMarkup: addToBasket
                  );
             }
+        }
+        if (data.StartsWith("add_"))
+        {
+
         }
     }
 }

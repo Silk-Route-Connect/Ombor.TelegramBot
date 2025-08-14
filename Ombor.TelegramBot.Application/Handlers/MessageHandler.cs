@@ -1,4 +1,5 @@
-﻿using Ombor.TelegramBot.Application.Interfaces;
+﻿using Ombor.TelegramBot.Application.Extentions;
+using Ombor.TelegramBot.Application.Interfaces;
 using Ombor.TelegramBot.Domain.Enums;
 using Ombor.TelegramBot.Domain.Requests;
 using Telegram.Bot;
@@ -21,6 +22,13 @@ internal sealed class MessageHandler(ITelegramBotClient bot, IApiService apiServ
         var chatId = message.Chat.Id;
         var text = message.Text;
 
+        if (text == "uz" || text == "ru" || text == "en")
+        {
+            await ChangeLanguage(chatId, text);
+
+            return;
+        }
+
         var categories = await apiService.GetCategoriesAsync();
 
         switch (text)
@@ -29,25 +37,32 @@ internal sealed class MessageHandler(ITelegramBotClient bot, IApiService apiServ
                 PushNavigation(chatId, "🏠 Bosh menyu");
                 await bot.SendMessage(
                     chatId,
-                    "Assalomu alaykum botimizga xush kelibsiz quyidagilardan birini tanlang ");
+                    Translator.Translate("welcome", Translator.UserLang[chatId]));
 
                 await SendMainMenuAsync(chatId);
                 break;
             case "/language":
                 PushNavigation(chatId, "language");
-                await bot.SendMessage(chatId, "hozircha bunaqa funksiya mavjud emas :)");
+                await SendChangeLanguageAsync(chatId);
                 break;
-            case "🛍 Kategoriyalar":
+            case var txt when txt == Translator.Translate("categories", Translator.UserLang[chatId]):
                 PushNavigation(chatId, "🛍 Kategoriyalar");
                 await SendCategoriesAsync(chatId);
                 break;
-            case "🏠 Bosh menyu":
+            case var txt when txt == Translator.Translate("settings", Translator.UserLang[chatId]):
+                PushNavigation(chatId, "⚙️ Sozlamalar");
+                await SendSettingsAsync(chatId);
+                break;
+            case var txt when txt == Translator.Translate("main_menu", Translator.UserLang[chatId]):
                 PushNavigation(chatId, "🏠 Bosh menyu");
                 await SendMainMenuAsync(chatId);
                 break;
-            case "Orqaga":
+            case var txt when txt == Translator.Translate("back", Translator.UserLang[chatId]):
                 var page = PopNavigation(chatId);
                 await OpenPage(chatId, page);
+                break;
+            case var txt when txt == Translator.Translate("change_language", Translator.UserLang[chatId]):
+                await SendChangeLanguageAsync(chatId);
                 break;
             default:
                 if (categories
@@ -63,6 +78,7 @@ internal sealed class MessageHandler(ITelegramBotClient bot, IApiService apiServ
                 break;
         }
     }
+
 
     private async Task OpenPage(long chatId, string page)
     {
@@ -105,7 +121,7 @@ internal sealed class MessageHandler(ITelegramBotClient bot, IApiService apiServ
 
         if (categories is null || categories.Length == 0)
         {
-            await bot.SendMessage(chatId, "Kategoriyalar mavjud emas.");
+            await bot.SendMessage(chatId, Translator.Translate("no_categories", Translator.UserLang[chatId]));
             return;
         }
 
@@ -117,8 +133,8 @@ internal sealed class MessageHandler(ITelegramBotClient bot, IApiService apiServ
 
         categoryButtons.Add(
         [
-            new KeyboardButton("Orqaga"),
-            new KeyboardButton("🏠 Bosh menyu")
+            new KeyboardButton(Translator.Translate("back",Translator.UserLang[chatId])),
+            new KeyboardButton(Translator.Translate("main_menu",Translator.UserLang[chatId]))
         ]);
 
         var replyKeyboardMarkup = new ReplyKeyboardMarkup(categoryButtons)
@@ -128,7 +144,7 @@ internal sealed class MessageHandler(ITelegramBotClient bot, IApiService apiServ
 
         await bot.SendMessage(
             chatId: chatId,
-            text: $"📦 Kategoriya tanlang:",
+            text: Translator.Translate("select_category", Translator.UserLang[chatId]),
             replyMarkup: replyKeyboardMarkup);
     }
 
@@ -163,12 +179,12 @@ internal sealed class MessageHandler(ITelegramBotClient bot, IApiService apiServ
 
         if (currentPage > 1)
             paginationButtons.Add(InlineKeyboardButton.WithCallbackData(
-                text: "Orqaga",
+                text: Translator.Translate("back", Translator.UserLang[chatId]),
                 callbackData: $"products_{categoryId}_{currentPage - 1}"));
 
         if (currentPage < totalPages)
             paginationButtons.Add(InlineKeyboardButton.WithCallbackData(
-                text: "Keyingi",
+                text: Translator.Translate("next", Translator.UserLang[chatId]),
                 callbackData: $"products_{categoryId}_{currentPage + 1}"));
 
         if (paginationButtons.Count > 0)
@@ -178,16 +194,79 @@ internal sealed class MessageHandler(ITelegramBotClient bot, IApiService apiServ
 
         await bot.SendMessage(
             chatId: chatId,
-            text: $"Kategoriya bo'yicha {products.Length} ta mahsulot topildi.",
+            text: Translator.Translate("products_found", Translator.UserLang[chatId]),
             replyMarkup: inlineKeyboard);
+    }
+
+    private async Task SendSettingsAsync(long chatId)
+    {
+        var settingsButtons = new ReplyKeyboardMarkup(
+        [
+            [
+                Translator.Translate("change_language", Translator.UserLang[chatId]),
+                Translator.Translate("back", Translator.UserLang[chatId])
+            ]
+        ])
+        {
+            ResizeKeyboard = true
+        };
+
+        await bot.SendMessage(
+            chatId,
+            Translator.Translate("settings", Translator.UserLang[chatId]),
+            replyMarkup: settingsButtons);
+    }
+
+    private async Task SendChangeLanguageAsync(long chatId)
+    {
+        var languages = new ReplyKeyboardMarkup(
+         [
+             [ "uz","ru", "en" ],
+             [
+                 Translator.Translate("back", Translator.UserLang[chatId]),
+                 Translator.Translate("main_menu", Translator.UserLang[chatId])
+             ]
+         ])
+        {
+            ResizeKeyboard = true
+        };
+
+        await bot.SendMessage(
+            chatId: chatId,
+            text: Translator.Translate("select_language", Translator.UserLang[chatId]),
+            replyMarkup: languages);
+    }
+
+
+    private async Task ChangeLanguage(long chatId, string language)
+    {
+        if (Translator.UserLang.ContainsKey(chatId))
+        {
+            Translator.UserLang[chatId] = language;
+        }
+        else
+        {
+            Translator.UserLang.Add(chatId, language);
+        }
+
+        await bot.SendMessage(
+               chatId,
+               Translator.Translate("language_changed", Translator.UserLang[chatId]));
+        await SendMainMenuAsync(chatId);
     }
 
     private async Task SendMainMenuAsync(long chatId)
     {
         var mainMenuButtons = new ReplyKeyboardMarkup(
         [
-            ["🛍 Kategoriyalar", "🛒 Savatcha"],
-            [ "📦 Buyurtmalar", "⚙ Sozlamalar"]
+            [
+                Translator.Translate("categories",Translator.UserLang[chatId]),
+                Translator.Translate("cart",Translator.UserLang[chatId])
+            ],
+            [
+                Translator.Translate("orders", Translator.UserLang[chatId]),
+                Translator.Translate("settings", Translator.UserLang[chatId])
+            ]
         ])
         {
             ResizeKeyboard = true
@@ -195,7 +274,7 @@ internal sealed class MessageHandler(ITelegramBotClient bot, IApiService apiServ
 
         await bot.SendMessage(
             chatId: chatId,
-            text: "📋 Asosiy menyu:",
+            text: Translator.Translate("main_menu", Translator.UserLang[chatId]),
             replyMarkup: mainMenuButtons);
     }
 }

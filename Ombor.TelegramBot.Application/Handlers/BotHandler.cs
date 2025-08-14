@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Ombor.TelegramBot.Application.Extentions;
 using Ombor.TelegramBot.Application.Interfaces;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -24,6 +25,22 @@ public class BotHandler
 
     public async Task OnUpdate(Update update)
     {
+        if (update.Message is null)
+        {
+            if (!Translator.UserLang.TryGetValue(update.CallbackQuery!.Message!.Chat.Id, out var lang))
+            {
+                Translator.UserLang[update.CallbackQuery.Message.Chat.Id] = "uz";
+            }
+        }
+        else
+        {
+            if (!Translator.UserLang.TryGetValue(update.Message.Chat.Id, out var lang))
+            {
+                Translator.UserLang[update.Message.Chat.Id] = "uz";
+            }
+        }
+
+
         switch (update.Type)
         {
             case UpdateType.Message:
