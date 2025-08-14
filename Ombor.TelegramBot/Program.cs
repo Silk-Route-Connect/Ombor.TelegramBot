@@ -26,6 +26,7 @@ var host = Host.CreateDefaultBuilder(args)
     })
     .Build();
 
+Translator.Load("dictionary.json");
 var bot = host.Services.GetRequiredService<ITelegramBotClient>();
 var botHandler = host.Services.GetRequiredService<BotHandler>();
 
